@@ -1,3 +1,15 @@
+> **This is Open Meridian's fork of [Dockview](https://github.com/dockview/dockview)**, showing Dockview working with
+> [Open Meridian](https://open-meridian.dev). Our changes are on this branch (`open-meridian`); the `master`
+> branch tracks upstream unchanged.
+>
+> Dockview's panel layouts hosting Open Meridian's order and execution views. This fork uses only Dockview's MIT-licensed packages; it doesn't modify or ship `dockview-enterprise`.
+>
+> **Status:** the integration isn't built yet. When it is, this section says how to run it locally against an Open
+> Meridian deployment. It isn't listed in Open Meridian's plugin registry.
+>
+> Dockview is licensed under MIT; this fork keeps that licence and its notices. It is not affiliated with or
+> endorsed by Dockview's authors.
+
 <div align="center">
 
 <picture>
