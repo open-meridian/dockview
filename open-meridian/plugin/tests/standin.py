@@ -134,6 +134,10 @@ class Sidecar(Recorder):
                     unanswered=[ops.Unanswered(dataset=DATASET, reason=ops.UNANSWERED_REASON_NOT_ENTITLED)]
                 )
             if params.interval_ns != 86_400 * 1_000_000_000:
-                return ops.ListBarsResult()
+                # Daily bars alone, as a data plugin recording days answers:
+                # any other length is declined, its source silent.
+                return ops.ListBarsResult(
+                    unanswered=[ops.Unanswered(dataset=DATASET, reason=ops.UNANSWERED_REASON_SOURCE_SILENT)]
+                )
             return fixture("list_bars.json", ops.ListBarsResult())
         raise AssertionError(f"the desk read {method}, which no stand-in here answers")

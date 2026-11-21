@@ -4,6 +4,11 @@
 # open-meridian/finos-workspace's ci/deployment.sh does it), with two dashboard
 # copies (values.yaml) and the platform stand-in (platform.sh) as its platform.
 #
+# A development deployment (`--development`), which says so on every page, so
+# that a data plugin's sample data may be switched on: plugin-truefx's history
+# files are the chart's bars (plugins.sh, e2e.py). `--plain-http` keeps it on
+# plain HTTP, as before, with no certificate.
+#
 # `meridian up` installs it at http://meridian.localhost: plain HTTP on a name
 # under .localhost, which Chromium sends to this machine by itself, as it does
 # each plugin's host, {instance}.plugins.meridian.localhost.
@@ -47,6 +52,6 @@ ready "an ingress class" sh -c 'kubectl get ingressclass -o name | grep -q .'
 # here enrols. The platform is the stand-in on this machine, which k3d names
 # host.k3d.internal inside the cluster.
 export MERIDIAN_ENROLMENT_CODE="ENR-P3CI-P3CI-P3CI"
-meridian up --id DEP-00000000000000000000000000 --no-doctor --no-archive --plain-http \
+meridian up --id DEP-00000000000000000000000000 --no-doctor --no-archive --plain-http --development \
   --chart-version "$CHART_VERSION" --platform http://host.k3d.internal:8000 \
   -f "$HERE/values.yaml" 2>&1 | tee "$RUN_DIR/meridian-up.log"

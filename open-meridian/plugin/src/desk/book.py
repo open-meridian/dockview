@@ -45,7 +45,8 @@ NS = 1_000_000_000
 ROLE = "reporting"
 
 #: The bar lengths the chart offers, shortest first, by the label it shows:
-#: a length is offered only where the lake holds bars of it.
+#: a length is offered only where the lake holds bars of it in the chart's
+#: window, its last 500 bars (`Book.bars`).
 INTERVALS = {"1m": 60 * NS, "1h": 3600 * NS, "1d": 86_400 * NS}
 
 #: How many pages of one read are followed at the most: a page is the book's
