@@ -1,0 +1,1294 @@
+{
+ "bars": [
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761004800000000000",
+    "validUntilNs": "1761091200000000000",
+    "recordedAtNs": "1761091200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11400",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11430",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11380",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11410",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761091200000000000",
+    "validUntilNs": "1761177600000000000",
+    "recordedAtNs": "1761177600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11410",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11453",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11390",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11433",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761177600000000000",
+    "validUntilNs": "1761264000000000000",
+    "recordedAtNs": "1761264000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11433",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11488",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11413",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11468",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761264000000000000",
+    "validUntilNs": "1761350400000000000",
+    "recordedAtNs": "1761350400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11468",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11532",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11448",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11512",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761350400000000000",
+    "validUntilNs": "1761436800000000000",
+    "recordedAtNs": "1761436800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11512",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11581",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11492",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11561",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761436800000000000",
+    "validUntilNs": "1761523200000000000",
+    "recordedAtNs": "1761523200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11561",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11631",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11541",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11611",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761523200000000000",
+    "validUntilNs": "1761609600000000000",
+    "recordedAtNs": "1761609600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11611",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11677",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11591",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11657",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761609600000000000",
+    "validUntilNs": "1761696000000000000",
+    "recordedAtNs": "1761696000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11657",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11716",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11637",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11696",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761696000000000000",
+    "validUntilNs": "1761782400000000000",
+    "recordedAtNs": "1761782400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11696",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11744",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11676",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11724",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761782400000000000",
+    "validUntilNs": "1761868800000000000",
+    "recordedAtNs": "1761868800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11724",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11760",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11704",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11740",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761868800000000000",
+    "validUntilNs": "1761955200000000000",
+    "recordedAtNs": "1761955200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11740",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11762",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11720",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11742",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1761955200000000000",
+    "validUntilNs": "1762041600000000000",
+    "recordedAtNs": "1762041600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11742",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11762",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11712",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11732",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762041600000000000",
+    "validUntilNs": "1762128000000000000",
+    "recordedAtNs": "1762128000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11732",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11752",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11692",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11712",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762128000000000000",
+    "validUntilNs": "1762214400000000000",
+    "recordedAtNs": "1762214400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11712",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11732",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11665",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11685",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762214400000000000",
+    "validUntilNs": "1762300800000000000",
+    "recordedAtNs": "1762300800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11685",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11705",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11635",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11655",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762300800000000000",
+    "validUntilNs": "1762387200000000000",
+    "recordedAtNs": "1762387200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11655",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11675",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11607",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11627",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762387200000000000",
+    "validUntilNs": "1762473600000000000",
+    "recordedAtNs": "1762473600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11627",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11647",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11584",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11604",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762473600000000000",
+    "validUntilNs": "1762560000000000000",
+    "recordedAtNs": "1762560000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11604",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11624",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11571",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11591",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762560000000000000",
+    "validUntilNs": "1762646400000000000",
+    "recordedAtNs": "1762646400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11591",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11611",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11570",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11590",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762646400000000000",
+    "validUntilNs": "1762732800000000000",
+    "recordedAtNs": "1762732800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11590",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11622",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11570",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11602",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762732800000000000",
+    "validUntilNs": "1762819200000000000",
+    "recordedAtNs": "1762819200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11602",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11647",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11582",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11627",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762819200000000000",
+    "validUntilNs": "1762905600000000000",
+    "recordedAtNs": "1762905600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11627",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11683",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11607",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11663",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762905600000000000",
+    "validUntilNs": "1762992000000000000",
+    "recordedAtNs": "1762992000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11663",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11728",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11643",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11708",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1762992000000000000",
+    "validUntilNs": "1763078400000000000",
+    "recordedAtNs": "1763078400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11708",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11777",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11688",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11757",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763078400000000000",
+    "validUntilNs": "1763164800000000000",
+    "recordedAtNs": "1763164800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11757",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11827",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11737",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11807",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763164800000000000",
+    "validUntilNs": "1763251200000000000",
+    "recordedAtNs": "1763251200000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11807",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11872",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11787",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11852",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763251200000000000",
+    "validUntilNs": "1763337600000000000",
+    "recordedAtNs": "1763337600000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11852",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11910",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11832",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11890",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763337600000000000",
+    "validUntilNs": "1763424000000000000",
+    "recordedAtNs": "1763424000000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11890",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11936",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11870",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11916",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763424000000000000",
+    "validUntilNs": "1763510400000000000",
+    "recordedAtNs": "1763510400000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11916",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11950",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11896",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11930",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  },
+  {
+   "meta": {
+    "subjects": [
+     {
+      "entityId": "INS-EUR"
+     }
+    ],
+    "source": {
+     "dataset": "truefx:daily"
+    },
+    "validFromNs": "1763510400000000000",
+    "validUntilNs": "1763596800000000000",
+    "recordedAtNs": "1763596800000000000"
+   },
+   "open": {
+    "amount": {
+     "low": "11930",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "high": {
+    "amount": {
+     "low": "11950",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "low": {
+    "amount": {
+     "low": "11910",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   },
+   "close": {
+    "amount": {
+     "low": "11930",
+     "scale": 4
+    },
+    "instrumentId": "INS-USD"
+   }
+  }
+ ]
+}
