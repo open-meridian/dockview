@@ -156,7 +156,21 @@ class Desk(meridian.Pages):
         if route == "price":
             return _json({"latest": await self.book.latest(base, quote)})
         if route == "intervals":
-            held = [label for label, ns in INTERVALS.items() if await self.book.bars(base, quote, ns, most=2)]
+            # Each length over the chart's own window, so a length is offered
+            # wherever the chart would draw bars of it, however old the newest
+            # is. A length the lake declines (one no dataset covers, or whose
+            # source is silent) is not offered, and does not hide another that
+            # holds bars; with none held, what was declined is said.
+            held: list[str] = []
+            declined: list[str] = []
+            for label, ns in INTERVALS.items():
+                try:
+                    if await self.book.bars(base, quote, ns):
+                        held.append(label)
+                except Refused as why:
+                    declined.append(str(why))
+            if not held and declined:
+                raise Refused(" ".join(dict.fromkeys(declined)))
             return _json({"intervals": held})
         if route == "bars":
             label = q.get("interval", "1d")

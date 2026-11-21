@@ -3,17 +3,20 @@
 As the deployment admin (`pat`, first_run.py), at the dashboard's own pages:
 two accounts, each in an account group of its own; View on the desk for pat
 on the first and for sam on the second (user groups, an access group,
-permissions). plugin-ecb's dataset of reference rates is licensed and the
-desk entitled to it. Then:
+permissions). plugin-truefx's sample data is switched on at its settings (a
+development deployment's setting); plugin-ecb's dataset of reference rates
+and plugin-truefx's daily dataset are licensed, and the desk entitled to
+both. Then:
 
 1. as pat, the desk's default layout renders in its area: every panel's tab;
 2. the picker points the watchlist and the chart at EUR/USD, looked up in
    the deployment's master, and then at EUR/GBP. The desk's lookups read the
    master and never add to it, so a currency is found once the data plugin
    has resolved it, which it does as its first rates arrive (`pick`);
-3. the watchlist shows a price with its time. The ECB publishes prices, not
-   bars, so the chart says it has none, never an empty panel; the chart's
-   bars are checked on the browser job's demo data;
+3. the watchlist shows a price with its time, and the chart shows
+   plugin-truefx's daily bars, the last with its time: a day of its sample
+   history, in October 2026 (the chart's window is its last 500 bars of a
+   length, so a day that old is drawn);
 4. the blotter names pat's account alone and shows its empty state: CI
    places no order (the populated blotter is the browser job's, on its demo
    data, and the dev deployment's);
@@ -53,7 +56,13 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeout
 DASHBOARD = "http://meridian.localhost"
 INSTANCE = "desk"
 PLUGIN = f"http://{INSTANCE}.plugins.meridian.localhost"
-DATASETS = ("ecb:ecb_fx",)
+DATASETS = ("ecb:ecb_fx", "truefx:daily")
+#: plugin-truefx's instance, whose sample data gives the chart its bars.
+TRUEFX = "truefx"
+#: The month plugin-truefx's sample history falls in (its synthetic history
+#: files, business dates 2 to 8 October 2026), and the dataset of its bars.
+SAMPLE_MONTH = "2026-10"
+BARS_DATASET = "truefx:daily"
 RUN = Path(sys.argv[1])
 SHOTS = RUN / "shots"
 NOTE = "The desk's CI run"
@@ -65,6 +74,11 @@ RECORDS_READ_EVERY = 30
 #: How long the data plugin's first rates are waited for, in seconds: they
 #: bring its currencies into the master, and the price into the lake.
 FIRST_RATES = 900
+
+#: How long the chart's bars are waited for, in seconds: the lake asks the
+#: data plugin for the days the chart reads, and the chart asks again every
+#: 30 seconds until it holds them.
+FIRST_BARS = 600
 
 #: Each document a watched page's frames were answered, oldest first.
 DOCUMENTS: list[str] = []
@@ -228,6 +242,32 @@ def entitle(page: Page, dataset: str, allowed: bool) -> None:
          f"{'the entitlement' if allowed else 'the entitlement withdrawn'}: {INSTANCE} to {dataset}")
 
 
+def sample_data(page: Page) -> None:
+    """plugin-truefx's sample data on, at its settings as a deployment admin
+    sets it there: the form as drawn, its one field changed. The setting is
+    offered on a development deployment alone."""
+    path = f"/admin/plugins/{TRUEFX}/settings"
+    field = "value.sample_data"
+
+    def offered():
+        page.goto(f"{DASHBOARD}{path}")
+        return page.query_selector(f"form[data-settings] select[name='{field}']")
+
+    until(f"{TRUEFX}'s sample data offered at its settings", 300, offered, every=5)
+    drawn = page.evaluate(
+        """() => [...new FormData(document.querySelector('form[data-settings]')).entries()]
+                 .filter(([, value]) => typeof value === 'string')"""
+    )
+    fields = [(k, v) for k, v in drawn if k not in (field, "note")] + [(field, "true"), ("note", NOTE)]
+    post(page, path, fields, f"{TRUEFX}'s sample data on")
+
+    def saved():
+        page.goto(f"{DASHBOARD}{path}")
+        return page.eval_on_selector(f"select[name='{field}']", "el => el.value") == "true"
+
+    until(f"{TRUEFX}'s sample data saved on", 60, saved, every=3)
+
+
 def in_force(page: Page, who: str) -> None:
     """The person's View on the desk, in force at every dashboard copy: the
     desk answered at the plugin's host, through the way in the area's frame
@@ -319,6 +359,7 @@ def main() -> None:
 def checks(browser, page: Page) -> None:
     sign_in(page, "person.json")
     accounts = grant(page)
+    sample_data(page)
     license_and_entitle(page)
     in_force(page, "pat")
 
@@ -343,11 +384,18 @@ def checks(browser, page: Page) -> None:
         last = frame.locator("[data-chart='EUR/USD'] [data-last-bar]")
         at = last.get_attribute("data-last-bar") if last.count() else ""
         if at:
-            return f"the last bar at {at}"
+            return at, " ".join(last.inner_text().split())
         told = frame.locator("[data-panel=chart] .refused, [data-panel=chart] .empty")
-        return told.count() and f"no bars, and it says so: {' '.join(told.first.inner_text().split())[:200]}"
+        if told.count():
+            say(f"the chart has no bars yet: {' '.join(told.first.inner_text().split())[:200]}")
+        return None
 
-    say(f"the chart: {until('the chart, its bars or its saying it has none', 120, charted, every=5)}")
+    at, said = until(f"the chart's bars of EUR/USD from {BARS_DATASET}", FIRST_BARS, charted, every=10)
+    if not at.startswith(SAMPLE_MONTH) or BARS_DATASET not in said:
+        raise SystemExit(f"e2e: the chart's last bar is not a day of {BARS_DATASET}'s sample history "
+                         f"({SAMPLE_MONTH}): at {at!r}, {said!r}")
+    page.screenshot(path=str(SHOTS / "desk-chart.png"))
+    say(f"the chart: bars of EUR/USD, the last at {at}: {said}")
     pick(frame, "EUR/GBP")
     frame.locator("[data-chart='EUR/GBP']").wait_for(timeout=30_000)
     if frame.locator("[data-panel=watchlist] tr[data-pair='EUR/GBP'].active").count() != 1:

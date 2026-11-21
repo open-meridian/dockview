@@ -105,9 +105,19 @@ def test_the_latest_price_and_the_bars_with_their_times() -> None:
     assert held == ["1d"]
 
 
+def test_a_length_is_offered_over_the_charts_window_and_another_lengths_refusal_does_not_hide_it() -> None:
+    pat, sidecar = client(read={"ACC-A"})
+    held = body(pat.get("/api/intervals", "read", base="INS-EUR", quote="INS-USD"))
+    assert held == {"intervals": ["1d"]}
+    asked = {p.interval_ns: p.valid_until_ns - p.valid_from_ns for p in sidecar.asked if hasattr(p, "interval_ns")}
+    day = 86_400 * 1_000_000_000
+    assert asked[day] >= 500 * day, "the probe reads the chart's window, not the last two bars"
+    assert set(asked) == {60 * 1_000_000_000, 3600 * 1_000_000_000, day}
+
+
 def test_with_the_entitlement_withdrawn_the_panels_get_the_refusal_not_empty_data() -> None:
     pat, _ = client(Sidecar(entitled=False), read={"ACC-A"})
-    for route, query in (("price", {}), ("bars", {"interval": "1d"})):
+    for route, query in (("price", {}), ("bars", {"interval": "1d"}), ("intervals", {})):
         said = body(pat.get(f"/api/{route}", "read", base="INS-EUR", quote="INS-USD", **query))
         assert "not entitled to any dataset" in said["refused"]
 

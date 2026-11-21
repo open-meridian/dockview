@@ -6,10 +6,11 @@
 #   container: no Node on the runner), the licence scan of what it ships and
 #   of the image, and the desk at 375, 582 and 1280 wide against a
 #   stand-in sidecar on demo data (tests/fixtures), its requests recorded;
-# - deployment: a deployment from the released CLI and chart on k3d, with two
-#   dashboard copies and the platform-master stand-in; plugin-ecb (public and
-#   keyless) and this plugin uploaded and launched; then the e2e in a
-#   headless browser.
+# - deployment: a development deployment from the released CLI and chart on
+#   k3d, with two dashboard copies and the platform-master stand-in;
+#   plugin-ecb and plugin-truefx (public and keyless, truefx on its sample
+#   data) and this plugin uploaded and launched; then the e2e in a headless
+#   browser, the chart's bars among it.
 name: open-meridian
 
 on:
@@ -45,6 +46,10 @@ env:
   # open-meridian/finos-workspace pins it.
   ECB_REPO: https://github.com/open-meridian/plugin-ecb.git
   ECB_REV: 81f62f4e7e659f3bafee4fb73ce5f5994f5ebd3d
+  # plugin-truefx (public, keyless) at the commit that pins SDK 0.37.1: its
+  # sample data, on a development deployment, gives the chart its bars.
+  TRUEFX_REPO: https://github.com/open-meridian/plugin-truefx.git
+  TRUEFX_REV: 037fa62efd5b3e4ad656fb3ef43002c5dc8fd03c
 
 jobs:
   checks:
@@ -142,11 +147,11 @@ jobs:
           { echo "RUN_DIR=$run_dir"; echo "KUBECONFIG=$run_dir/kubeconfig"; echo "XDG_CONFIG_HOME=$run_dir/config"; } >>"$GITHUB_ENV"
       - name: The platform-master stand-in
         run: open-meridian/ci/platform.sh
-      - name: A deployment, from the released chart, with two dashboard copies
+      - name: A development deployment, from the released chart, with two dashboard copies
         run: open-meridian/ci/deployment.sh
       - name: First run, and two people
         run: python open-meridian/ci/first_run.py "$RUN_DIR"
-      - name: plugin-ecb and the desk, uploaded and launched by the released CLI
+      - name: plugin-ecb, plugin-truefx and the desk, uploaded and launched by the released CLI
         run: open-meridian/ci/plugins.sh
       - name: The desk, through the dashboard
         run: python open-meridian/ci/e2e.py "$RUN_DIR"
@@ -156,7 +161,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/kept"
           kubectl get pods -A -o wide >"$RUNNER_TEMP/kept/pods.txt" 2>&1 || true
           kubectl -n meridian get events --sort-by=.lastTimestamp >"$RUNNER_TEMP/kept/events.txt" 2>&1 || true
-          for c in dashboard launcher conductor instrument plugin-ecb plugin-desk; do
+          for c in dashboard launcher conductor instrument lake plugin-ecb plugin-truefx plugin-desk; do
             kubectl -n meridian logs "deploy/meridian-meridian-runtime-$c" --all-containers --tail=400 >"$RUNNER_TEMP/kept/$c.log" 2>&1 || true
           done
           # Each dashboard copy's own log: a request is answered by either.

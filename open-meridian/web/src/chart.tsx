@@ -60,20 +60,30 @@ export function ChartView({ pair }: { pair: Pair }) {
 
   useEffect(() => {
     let gone = false;
+    let again = 0;
     setIntervals(null);
     setProblem('');
-    void read<{ intervals: string[] }>('intervals', pairQuery(pair)).then((answer) => {
-      if (gone) return;
-      if (answer.refused || answer.error) {
-        setProblem(answer.refused ?? answer.error ?? '');
-        setIntervals([]);
-        return;
-      }
-      setIntervals(answer.intervals);
-      setInterval((held) => (answer.intervals.includes(held) ? held : (answer.intervals.at(-1) ?? '')));
-    });
+    // Asked again every 30 seconds while no length is held, as the bars are
+    // read again: a lake that has just asked a data plugin for them holds
+    // them once it answers.
+    const probe = () =>
+      void read<{ intervals: string[] }>('intervals', pairQuery(pair)).then((answer) => {
+        if (gone) return;
+        if (answer.refused || answer.error) {
+          setProblem(answer.refused ?? answer.error ?? '');
+          setIntervals([]);
+        } else {
+          setProblem('');
+          setIntervals(answer.intervals);
+          setInterval((held) => (answer.intervals.includes(held) ? held : (answer.intervals.at(-1) ?? '')));
+          if (answer.intervals.length) return;
+        }
+        again = window.setTimeout(probe, 30_000);
+      });
+    probe();
     return () => {
       gone = true;
+      window.clearTimeout(again);
     };
   }, [pair.label]);
 
