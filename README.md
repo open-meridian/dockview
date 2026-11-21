@@ -2,13 +2,39 @@
 > [Open Meridian](https://open-meridian.dev). Our changes are on this branch (`open-meridian`); the `master`
 > branch tracks upstream unchanged.
 >
-> Dockview's panel layouts hosting Open Meridian's order and execution views. This fork uses only Dockview's MIT-licensed packages; it doesn't modify or ship `dockview-enterprise`.
+> Dockview's panel layouts hosting Open Meridian's order and execution views. This fork uses only Dockview's
+> MIT-licensed packages; it doesn't modify or ship `dockview-enterprise`.
 >
-> **Status:** the integration isn't built yet. When it is, this section says how to run it locally against an Open
-> Meridian deployment. It isn't listed in Open Meridian's plugin registry.
+> ### Run it against your deployment
+>
+> The desk is a read-only plugin under [`open-meridian/`](open-meridian/): a blotter of orders, placements and fills,
+> positions, a watchlist, a price chart ([OpenAlgo Charts](https://github.com/marketcalls/openalgo-charts)) and an
+> instrument picker, in panels you dock, tab and float. It reads through its sidecar and shows each person only the
+> accounts they may read on it. It places no order.
+>
+> You need Docker and the `meridian` CLI connected to a deployment where you are a deployment admin
+> (`meridian connect <your dashboard>`).
+>
+> 1. Build the desk's front end: `open-meridian/ci/frontend.sh`.
+> 2. Upload and launch the plugin:
+>    `meridian plugin upload --dir open-meridian/plugin`, then
+>    `meridian plugin launch desk 0.1.0 --instance desk`.
+> 3. For prices and bars, launch a data plugin that records them, such as
+>    [plugin-truefx](https://github.com/open-meridian/plugin-truefx). On **Data sources**, license its datasets and
+>    entitle `desk` to them.
+> 4. On **Access**, grant people View or Open on `desk`, on the accounts whose orders and positions they may see.
+> 5. Open **desk** from the dashboard.
+>
+> Without a data plugin entitled, the watchlist and the chart say so instead of showing empty panels. The CI job in
+> `.github/workflows/open-meridian.yml` runs these steps on a local development deployment, with plugin-truefx's
+> sample data giving the chart its bars.
+>
+> This fork isn't listed in Open Meridian's plugin registry. What we add is under Dockview's MIT Licence; OpenAlgo
+> Charts is under the Apache License 2.0, and its notices ship with the plugin. Where each part comes from is in
+> [`open-meridian/PROVENANCE.md`](open-meridian/PROVENANCE.md).
 >
 > Dockview is licensed under MIT; this fork keeps that licence and its notices. It is not affiliated with or
-> endorsed by Dockview's authors.
+> endorsed by Dockview's authors, or by OpenAlgo's.
 
 <div align="center">
 
