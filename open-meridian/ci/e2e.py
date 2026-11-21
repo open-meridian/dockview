@@ -3,16 +3,17 @@
 As the deployment admin (`pat`, first_run.py), at the dashboard's own pages:
 two accounts, each in an account group of its own; View on the desk for pat
 on the first and for sam on the second (user groups, an access group,
-permissions). With plugin-truefx installed (plugins.sh, only when the run has
-a TrueFX username): Manage on it for pat, its username entered at its
-Settings form, its datasets licensed and the desk entitled to them. Then:
+permissions). plugin-ecb's dataset of reference rates is licensed and the
+desk entitled to it. Then:
 
 1. as pat, the desk's default layout renders in its area: every panel's tab;
 2. the picker points the watchlist and the chart at EUR/USD, looked up in
-   the deployment's master, and then at EUR/GBP;
-3. with plugin-truefx, the watchlist shows a price and the chart bars, each
-   with its time; without it, both show the refusal (no dataset entitled),
-   and the price and bars are checked on the browser job's demo data alone;
+   the deployment's master, and then at EUR/GBP. The desk's lookups read the
+   master and never add to it, so a currency is found once the data plugin
+   has resolved it, which it does as its first rates arrive (`pick`);
+3. the watchlist shows a price with its time. The ECB publishes prices, not
+   bars, so the chart says it has none, never an empty panel; the chart's
+   bars are checked on the browser job's demo data;
 4. the blotter names pat's account alone and shows its empty state: CI
    places no order (the populated blotter is the browser job's, on its demo
    data, and the dev deployment's);
@@ -23,8 +24,7 @@ Settings form, its datasets licensed and the desk entitled to them. Then:
    (screenshots kept);
 8. sam sees his own account alone, never pat's;
 9. kim, who holds no level on the plugin, is refused its page;
-10. with plugin-truefx, the entitlement withdrawn: the refusal, not empty
-    panels.
+10. the entitlement withdrawn: the refusal, not empty panels.
 
 A dashboard copy reads the access records every 30 seconds, so a grant made
 at one copy is refused at another until then. The run has two copies, and
@@ -34,14 +34,13 @@ that long (`in_force`).
 When a check fails, it says what the browser had: a screenshot, each frame's
 address and words, and the documents last answered (`tell`).
 
-Never prints a password or the TrueFX username. Usage: python3 e2e.py RUN_DIR
+Never prints a password. Usage: python3 e2e.py RUN_DIR
 """
 
 from __future__ import annotations
 
 import html
 import json
-import os
 import re
 import sys
 import time
@@ -49,20 +48,23 @@ from pathlib import Path
 from urllib.parse import parse_qsl, urljoin, urlsplit
 
 from playwright.sync_api import Frame, Page, sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeout
 
 DASHBOARD = "http://meridian.localhost"
 INSTANCE = "desk"
 PLUGIN = f"http://{INSTANCE}.plugins.meridian.localhost"
-TRUEFX = "truefx"
-DATASETS = ("truefx:daily", "truefx:live")
+DATASETS = ("ecb:ecb_fx",)
 RUN = Path(sys.argv[1])
 SHOTS = RUN / "shots"
-WITH_TRUEFX = (RUN / "data").read_text().strip() == "with-truefx"
 NOTE = "The desk's CI run"
 PANELS = {"picker": "Instrument", "watchlist": "Watchlist", "chart": "Chart", "blotter": "Blotter", "positions": "Positions"}
 
 #: How often a dashboard copy reads the access records, in seconds.
 RECORDS_READ_EVERY = 30
+
+#: How long the data plugin's first rates are waited for, in seconds: they
+#: bring its currencies into the master, and the price into the lake.
+FIRST_RATES = 900
 
 #: Each document a watched page's frames were answered, oldest first.
 DOCUMENTS: list[str] = []
@@ -199,33 +201,7 @@ def grant(page: Page) -> dict[str, str]:
                                           "account_group_id": group, "access_group_id": access},
              f"View on the desk for {person} on {account}")
         accounts[person] = account
-    if WITH_TRUEFX:
-        manage = defined(page, "/admin/access-groups", "access_group_id", "TrueFX manage",
-                         [("entries", f"{TRUEFX} data admin")])
-        users = minted(page, "Desk readers A")
-        form = token(page, "/admin")
-        post(page, "/admin/permissions", {"form_token": form, "user_group_id": users,
-                                          "account_group_id": "", "access_group_id": manage},
-             "Manage on plugin-truefx for pat")
     return accounts
-
-
-def truefx_username(page: Page) -> None:
-    """The TrueFX username, entered at plugin-truefx's Settings form as its
-    admin would; never printed."""
-    username = os.environ["TRUEFX_USERNAME"]
-
-    def form_shown():
-        page.goto(f"{DASHBOARD}/plugins/{TRUEFX}?level=admin&tab=settings")
-        return page.query_selector("input[name='secret.username']")
-
-    until("plugin-truefx's Settings form", 180, form_shown, every=5)
-    fields = {"form_token": page.get_attribute("input[name=form_token]", "value") or "",
-              "secret.username": username}
-    against = page.query_selector("input[name=against_updated_at_ns]")
-    if against:
-        fields["against_updated_at_ns"] = against.get_attribute("value") or ""
-    post(page, f"/admin/plugins/{TRUEFX}/settings", fields, "plugin-truefx's username entered")
 
 
 def license_and_entitle(page: Page) -> None:
@@ -296,10 +272,25 @@ def show(frame: Frame, panel: str) -> None:
 
 
 def pick(frame: Frame, asked: str) -> None:
-    show(frame, "picker")
-    frame.fill("#pick", asked)
-    frame.click(".picker button[type=submit]")
-    frame.locator(f"[data-panel=picker] [data-picked='{asked}']").wait_for(timeout=60_000)
+    """Look `asked` up at the picker until the master holds it. This plugin
+    holds `reporting`, whose lookups read the master and add nothing to it;
+    a currency is there once the data plugin has resolved it, as its first
+    rates arrive. Until then the picker says the master holds nothing."""
+    picked = frame.locator(f"[data-panel=picker] [data-picked='{asked}']")
+
+    def looked():
+        show(frame, "picker")
+        frame.fill("#pick", asked)
+        frame.click(".picker button[type=submit]")
+        try:
+            picked.wait_for(timeout=10_000)
+        except PlaywrightTimeout:
+            said = " ".join(frame.locator("[data-panel=picker]").inner_text().split())[:160]
+            say(f"the picker has not found {asked} yet: {said}")
+            return False
+        return True
+
+    until(f"the picker finding {asked} in the master", FIRST_RATES, looked, every=10)
 
 
 def accounts_shown(frame: Frame) -> str:
@@ -311,9 +302,6 @@ def accounts_shown(frame: Frame) -> str:
 
 def main() -> None:
     SHOTS.mkdir(parents=True, exist_ok=True)
-    if not WITH_TRUEFX:
-        say("plugin-truefx is not installed (no TrueFX username): the price and bar checks are the browser "
-            "job's, on demo data; here the watchlist and the chart are checked for the refusal")
     with sync_playwright() as p:
         browser = p.chromium.launch()
         admin = browser.new_context(viewport={"width": 1280, "height": 900})
@@ -331,9 +319,7 @@ def main() -> None:
 def checks(browser, page: Page) -> None:
     sign_in(page, "person.json")
     accounts = grant(page)
-    if WITH_TRUEFX:
-        truefx_username(page)
-        license_and_entitle(page)
+    license_and_entitle(page)
     in_force(page, "pat")
 
     asked: list[tuple[str, str]] = []
@@ -344,28 +330,24 @@ def checks(browser, page: Page) -> None:
     pick(frame, "EUR/USD")
     frame.locator("[data-chart='EUR/USD']").wait_for(timeout=30_000)
     row = frame.locator("[data-panel=watchlist] tr[data-pair='EUR/USD']")
-    if WITH_TRUEFX:
-        def priced():
-            show(frame, "watchlist")
-            price = row.locator(".price")
-            return price.count() and f"{price.inner_text()} at {row.locator('.time').inner_text()}"
 
-        say(f"the watchlist: EUR/USD {until('a price with its time', 900, priced, every=15)}")
+    def priced():
+        show(frame, "watchlist")
+        price = row.locator(".price")
+        return price.count() and f"{price.inner_text()} at {row.locator('.time').inner_text()}"
 
-        def barred():
-            show(frame, "chart")
-            return frame.locator("[data-chart='EUR/USD'] [data-last-bar]").get_attribute("data-last-bar")
+    say(f"the watchlist: EUR/USD {until('a price with its time', FIRST_RATES, priced, every=15)}")
 
-        say(f"the chart: the last bar at {until('bars with their times', 900, barred, every=15)}")
-    else:
-        for panel in ("watchlist", "chart"):
-            show(frame, panel)
-            refused = frame.locator(f"[data-panel={panel}] .refused").first
-            refused.wait_for(timeout=60_000)
-            said = refused.inner_text()
-            if "not entitled" not in said:
-                raise SystemExit(f"e2e: the {panel} said {said!r}, not the refusal")
-            say(f"the {panel}, no dataset entitled: {' '.join(said.split())[:160]}")
+    def charted():
+        show(frame, "chart")
+        last = frame.locator("[data-chart='EUR/USD'] [data-last-bar]")
+        at = last.get_attribute("data-last-bar") if last.count() else ""
+        if at:
+            return f"the last bar at {at}"
+        told = frame.locator("[data-panel=chart] .refused, [data-panel=chart] .empty")
+        return told.count() and f"no bars, and it says so: {' '.join(told.first.inner_text().split())[:200]}"
+
+    say(f"the chart: {until('the chart, its bars or its saying it has none', 120, charted, every=5)}")
     pick(frame, "EUR/GBP")
     frame.locator("[data-chart='EUR/GBP']").wait_for(timeout=30_000)
     if frame.locator("[data-panel=watchlist] tr[data-pair='EUR/GBP'].active").count() != 1:
@@ -443,21 +425,19 @@ def checks(browser, page: Page) -> None:
     say(f"kim, holding no level, refused: {answer.status} {' '.join(kim.inner_text('body').split())[:160]}")
 
     # 10. The entitlement withdrawn.
-    if WITH_TRUEFX:
-        for dataset in DATASETS:
-            entitle(page, dataset, allowed=False)
+    for dataset in DATASETS:
+        entitle(page, dataset, allowed=False)
 
-        def refused():
-            desk = open_desk(page)
-            show(desk, "watchlist")
-            page.wait_for_timeout(8000)
-            found = desk.locator("[data-panel=watchlist] .refused")
-            return found.count() and "not entitled" in found.first.inner_text() and found.first.inner_text()
+    def refused():
+        desk = open_desk(page)
+        show(desk, "watchlist")
+        page.wait_for_timeout(8000)
+        found = desk.locator("[data-panel=watchlist] .refused")
+        return found.count() and "not entitled" in found.first.inner_text() and found.first.inner_text()
 
-        said = until("the watchlist's refusal", 180, refused, every=5)
-        page.screenshot(path=str(SHOTS / "refused.png"))
-        say(f"withdrawn: {' '.join(said.split())[:200]}")
-
+    said = until("the watchlist's refusal", 180, refused, every=5)
+    page.screenshot(path=str(SHOTS / "refused.png"))
+    say(f"withdrawn: {' '.join(said.split())[:200]}")
 
 if __name__ == "__main__":
     main()
