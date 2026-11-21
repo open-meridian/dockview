@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "desk"
+version = "0.1.0"
+description = "A read-only desk of Dockview panels on an Open Meridian deployment: orders, positions, prices and bars"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+# The SDK and nothing else, pinned exactly: the sidecar this runs beside
+# speaks one version of the contract. Re-pinned at contract 31.
+dependencies = ["open-meridian==0.37.1"]
+
+[project.scripts]
+desk = "desk.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+desk = ["templates/*.html"]
+
+# What this plugin says about itself, which `meridian plugin upload` sends and
+# a deployment admin approves before it runs.
+[tool.meridian]
+# `reporting` alone in the first slice: it reads the book, the lake and the
+# master, and records nothing. No order act is open to it.
+roles = ["reporting"]
+interface = true
+declaration = "desk.declaration:DECLARATION"

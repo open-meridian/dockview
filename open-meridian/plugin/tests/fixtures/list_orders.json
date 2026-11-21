@@ -1,0 +1,218 @@
+{
+ "orders": [
+  {
+   "orderId": "ORD-A1",
+   "accountId": "ACC-A",
+   "instrumentId": "INS-EUR",
+   "side": "SIDE_BUY",
+   "quantity": {
+    "low": "100000"
+   },
+   "orderType": "ORDER_TYPE_LIMIT",
+   "limitPrice": {
+    "amount": {
+     "low": "11520",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "receivedAtNs": "1763650800000000000",
+   "status": {
+    "state": "ORDER_STATE_FILLED"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "3",
+    "previousSequence": "2"
+   }
+  },
+  {
+   "orderId": "ORD-A2",
+   "accountId": "ACC-A",
+   "instrumentId": "INS-EUR",
+   "side": "SIDE_SELL",
+   "quantity": {
+    "low": "50000"
+   },
+   "orderType": "ORDER_TYPE_LIMIT",
+   "limitPrice": {
+    "amount": {
+     "low": "11580",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "receivedAtNs": "1763652600000000000",
+   "status": {
+    "state": "ORDER_STATE_WORKING"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "6",
+    "previousSequence": "5"
+   }
+  },
+  {
+   "orderId": "ORD-B1",
+   "accountId": "ACC-B",
+   "instrumentId": "INS-EUR",
+   "side": "SIDE_SELL",
+   "quantity": {
+    "low": "250000"
+   },
+   "orderType": "ORDER_TYPE_LIMIT",
+   "limitPrice": {
+    "amount": {
+     "low": "11510",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "receivedAtNs": "1763651400000000000",
+   "status": {
+    "state": "ORDER_STATE_WORKING"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "8",
+    "previousSequence": "7"
+   }
+  }
+ ],
+ "asOf": {
+  "partitions": [
+   {
+    "partition": "book-0",
+    "sequence": "10"
+   }
+  ]
+ },
+ "placements": [
+  {
+   "placementId": "PLC-A1",
+   "orderId": "ORD-A1",
+   "accountId": "ACC-A",
+   "quantity": {
+    "low": "100000"
+   },
+   "limitPrice": {
+    "amount": {
+     "low": "11520",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "routedAtNs": "1763650860000000000",
+   "status": {
+    "state": "PLACEMENT_STATE_FILLED"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "4",
+    "previousSequence": "3"
+   }
+  },
+  {
+   "placementId": "PLC-A2",
+   "orderId": "ORD-A2",
+   "accountId": "ACC-A",
+   "quantity": {
+    "low": "50000"
+   },
+   "limitPrice": {
+    "amount": {
+     "low": "11580",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "routedAtNs": "1763652660000000000",
+   "status": {
+    "state": "PLACEMENT_STATE_WORKING"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "7",
+    "previousSequence": "6"
+   }
+  },
+  {
+   "placementId": "PLC-B1",
+   "orderId": "ORD-B1",
+   "accountId": "ACC-B",
+   "quantity": {
+    "low": "250000"
+   },
+   "limitPrice": {
+    "amount": {
+     "low": "11510",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "routedAtNs": "1763651460000000000",
+   "status": {
+    "state": "PLACEMENT_STATE_WORKING"
+   },
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "9",
+    "previousSequence": "8"
+   }
+  }
+ ],
+ "executions": [
+  {
+   "executionId": "EXE-A1",
+   "orderId": "ORD-A1",
+   "placementId": "PLC-A1",
+   "accountId": "ACC-A",
+   "instrumentId": "INS-EUR",
+   "side": "SIDE_BUY",
+   "quantity": {
+    "low": "100000"
+   },
+   "price": {
+    "amount": {
+     "low": "11518",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "tradeTimeNs": "1763650920000000000",
+   "tradeDate": "2025-11-20",
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "5",
+    "previousSequence": "4"
+   },
+   "state": "EXECUTION_STATE_MATCHED"
+  },
+  {
+   "executionId": "EXE-B1",
+   "orderId": "ORD-B1",
+   "placementId": "PLC-B1",
+   "accountId": "ACC-B",
+   "instrumentId": "INS-EUR",
+   "side": "SIDE_SELL",
+   "quantity": {
+    "low": "100000"
+   },
+   "price": {
+    "amount": {
+     "low": "11511",
+     "scale": 4
+    },
+    "currencyCode": "USD"
+   },
+   "tradeTimeNs": "1763651520000000000",
+   "tradeDate": "2025-11-20",
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "10",
+    "previousSequence": "9"
+   },
+   "state": "EXECUTION_STATE_MATCHED"
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "open-meridian-desk-web",
+  "private": true,
+  "license": "MIT",
+  "description": "The desk's front end: Dockview's MIT packages and OpenAlgo Charts, built into ../plugin/web",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "dockview-core": "8.9.1",
+    "dockview-react": "8.9.1",
+    "openalgo-charts": "2.7.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3"
+  }
+}

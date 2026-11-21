@@ -1,0 +1,248 @@
+/* The desk's look from Open Meridian's UI kit: its tokens only (the scheme,
+ * linked by index.html from the path the dashboard serves it at), mapped onto
+ * Dockview's variables. It follows the person's light or dark mode. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--page);
+  color: var(--ink);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* The stated minimum width: 375 px, with no sideways scroll. */
+body {
+  min-width: 0;
+}
+
+#desk,
+.desk {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.desk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+}
+
+.desk-title {
+  font-weight: 600;
+}
+
+.desk-note {
+  color: var(--ink-soft);
+  font-size: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.desk-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.desk-dock {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.desk-dock.dockview-theme-light,
+.desk-dock .dockview-theme-light {
+  --dv-group-view-background-color: var(--card);
+  --dv-tabs-and-actions-container-background-color: var(--page);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--card);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--page);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--card);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--page);
+  --dv-activegroup-visiblepanel-tab-color: var(--ink);
+  --dv-activegroup-hiddenpanel-tab-color: var(--ink-soft);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--ink-soft);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--ink-faint);
+  --dv-separator-border: var(--line);
+  --dv-paneview-header-border-color: var(--line);
+  --dv-tab-divider-color: var(--line-soft);
+  --dv-drag-over-background-color: var(--accent-wash);
+  --dv-icon-hover-background-color: var(--hover);
+  --dv-floating-border: 1px solid var(--line-strong);
+  --dv-active-sash-color: var(--accent);
+}
+
+button {
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--hover);
+}
+
+button.on {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+}
+
+button.link,
+button.ghost {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent-ink);
+}
+
+.panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: auto;
+  background: var(--card);
+}
+
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line-soft);
+  font-weight: 600;
+}
+
+.panel-head .muted {
+  font-weight: 400;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.empty,
+.refused {
+  margin: 12px 10px;
+}
+
+.refused {
+  color: var(--danger);
+  background: var(--danger-wash);
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.table-wrap {
+  overflow: auto;
+  min-width: 0;
+}
+
+table.grid {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+table.grid th,
+table.grid td {
+  text-align: left;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--line-soft);
+  white-space: nowrap;
+}
+
+table.grid th {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+table.grid .num {
+  text-align: right;
+}
+
+table.grid tr.active {
+  background: var(--accent-wash);
+}
+
+td.buy {
+  color: var(--buy);
+}
+
+td.sell {
+  color: var(--sell);
+}
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 10px;
+}
+
+.picker input {
+  flex: 1 1 160px;
+  min-width: 0;
+  font: inherit;
+  color: var(--ink);
+  background: var(--page);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+.picked {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 10px;
+  margin: 0 10px;
+}
+
+.picked dt {
+  color: var(--ink-soft);
+}
+
+.picked dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.picker + .muted,
+.panel > .small {
+  margin: 6px 10px;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+.intervals {
+  display: flex;
+  gap: 4px;
+}
+
+.chart-canvas {
+  flex: 1 1 auto;
+  min-height: 160px;
+  min-width: 0;
+  position: relative;
+}

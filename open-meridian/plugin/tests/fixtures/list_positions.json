@@ -1,0 +1,32 @@
+{
+ "positions": [
+  {
+   "accountId": "ACC-A",
+   "instrumentId": "INS-EUR",
+   "side": "HOLDING_SIDE_LONG",
+   "tradeDateQuantity": {
+    "low": "100000"
+   },
+   "settledQuantity": {},
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "5",
+    "previousSequence": "4"
+   }
+  },
+  {
+   "accountId": "ACC-B",
+   "instrumentId": "INS-EUR",
+   "side": "HOLDING_SIDE_SHORT",
+   "tradeDateQuantity": {
+    "low": "100000"
+   },
+   "settledQuantity": {},
+   "lastChange": {
+    "partition": "book-0",
+    "sequence": "10",
+    "previousSequence": "9"
+   }
+  }
+ ]
+}
