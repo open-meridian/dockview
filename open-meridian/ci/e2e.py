@@ -34,6 +34,12 @@ at one copy is refused at another until then. The run has two copies, and
 opens the desk once each person's grant has held at the plugin's host for
 that long (`in_force`).
 
+A plugin's workload is available before the deployment knows the plugin:
+its sidecar reports once it has reached the broker, and until that first
+report an access group naming the desk is refused. The run defines its
+access group once the deployment has heard from the desk (`defined`,
+`FIRST_REPORT`).
+
 When a check fails, it says what the browser had: a screenshot, each frame's
 address and words, and the documents last answered (`tell`).
 
@@ -79,6 +85,15 @@ FIRST_RATES = 900
 #: data plugin for the days the chart reads, and the chart asks again every
 #: 30 seconds until it holds them.
 FIRST_BARS = 600
+
+#: How long the desk's first report is waited for, in seconds: its sidecar
+#: reports once it has reached the broker, which is after its workload is
+#: available. Until then the deployment does not know the desk or its roles.
+FIRST_REPORT = 300
+
+#: What the deployment answers an access group naming a plugin it has not
+#: heard from yet.
+NOT_REPORTED = f"no plugin {INSTANCE} has reported"
 
 #: Each document a watched page's frames were answered, oldest first.
 DOCUMENTS: list[str] = []
@@ -152,17 +167,25 @@ def token(page: Page, path: str) -> str:
     return page.get_attribute("input[name=form_token]", "value", timeout=30_000) or ""
 
 
-def post(page: Page, path: str, fields, what: str) -> None:
+def send(page: Page, path: str, fields):
     """A form as a browser posts it; `fields` a mapping, or pairs where a
-    name repeats."""
+    name repeats. Returns the answer, unjudged."""
     pairs = list(fields.items()) if isinstance(fields, dict) else list(fields)
     body = "&".join(f"{k}={_quote(v)}" for k, v in pairs)
-    answer = page.request.post(
+    return page.request.post(
         f"{DASHBOARD}{path}",
         data=body,
         headers={"content-type": "application/x-www-form-urlencoded"},
         max_redirects=0,
     )
+
+
+def post(page: Page, path: str, fields, what: str) -> None:
+    """A form posted (`send`), and its answer held to having been taken."""
+    taken(page, path, send(page, path, fields), what)
+
+
+def taken(page: Page, path: str, answer, what: str) -> None:
     if answer.status not in (200, 302, 303):
         raise SystemExit(f"e2e: {what} answered {answer.status}: {words(answer.text())}")
     if answer.status == 200:
@@ -191,10 +214,23 @@ def minted(page: Page, name: str, section: str = "") -> str:
     return found.group(1) if found else ""
 
 
-def defined(page: Page, path: str, field: str, name: str, extra, section: str = "") -> str:
-    found = minted(page, name, section)
-    form = token(page, "/admin")
-    post(page, path, [("form_token", form), (field, found), ("name", name), *extra], f"{name} defined")
+def defined(page: Page, path: str, field: str, name: str, extra, section: str = "", once: str = "") -> str:
+    """A record defined at its form, and its identifier. With `once`, the
+    deployment's word that it does not know the desk yet (`NOT_REPORTED`):
+    the form is posted again, a refused one having changed nothing, until
+    the deployment has heard from the desk. Any other refusal fails at once."""
+
+    def sent():
+        found = minted(page, name, section)
+        form = token(page, "/admin")
+        answer = send(page, path, [("form_token", form), (field, found), ("name", name), *extra])
+        if once and answer.status == 400 and once in words(answer.text(), 4000):
+            say(f"{name} not defined yet: {once}")
+            return None
+        return answer
+
+    answer = until(f"the deployment hearing from {INSTANCE}", FIRST_REPORT, sent, every=2) if once else sent()
+    taken(page, path, answer, f"{name} defined")
     return until(f"{name} listed", 90, lambda: minted(page, name, section), every=3)
 
 
@@ -203,7 +239,7 @@ def grant(page: Page) -> dict[str, str]:
     second. Returns each person's account."""
     accounts = {}
     access = defined(page, "/admin/access-groups", "access_group_id", "Desk view",
-                     [("entries", f"{INSTANCE} reporting read")])
+                     [("entries", f"{INSTANCE} reporting read")], once=NOT_REPORTED)
     for person, letter in (("pat", "A"), ("sam", "B")):
         account = defined(page, "/admin/accounts", "account_id", f"Desk account {letter}", [], section="Accounts")
         group = defined(page, "/admin/account-groups", "account_group_id", f"Desk accounts {letter}",
