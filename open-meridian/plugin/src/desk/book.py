@@ -167,6 +167,19 @@ class Pair:
     identifiers: list[str] = field(default_factory=list)
 
 
+@dataclass(frozen=True)
+class Bar:
+    """One bar of a pair, its prices as the lake records them, as text."""
+
+    time: int
+    at: str
+    open: str
+    high: str
+    low: str
+    close: str
+    dataset: str
+
+
 def _change(ref: Any) -> tuple[str, int]:
     if ref is None or not ref.ByteSize():
         return "", 0
@@ -411,11 +424,26 @@ class Book(reporting.Role):
     async def bars(self, base: str, quote: str, interval_ns: int, most: int = 500) -> list[dict[str, Any]]:
         """The pair's bars of one length, oldest first, as the chart takes
         them: UTC seconds, and open, high, low and close as numbers."""
+        return [
+            {
+                "time": bar.time,
+                "open": float(bar.open or 0),
+                "high": float(bar.high or 0),
+                "low": float(bar.low or 0),
+                "close": float(bar.close or 0),
+                "dataset": bar.dataset,
+            }
+            for bar in await self.bar_rows(base, quote, interval_ns, most)
+        ]
+
+    async def bar_rows(self, base: str, quote: str, interval_ns: int, most: int = 500) -> list[Bar]:
+        """The pair's bars of one length over the chart's window, oldest
+        first, each price exactly as the lake records it."""
         why = await self.entitlement_refusal()
         if why:
             raise Refused(why)
         now = int(datetime.now(UTC).timestamp() * NS)
-        seen: dict[int, dict[str, Any]] = {}
+        seen: dict[int, Bar] = {}
         unanswered: list[str] = []
         cursor = ""
         for _ in range(PAGES):
@@ -430,14 +458,15 @@ class Book(reporting.Role):
             for bar in page.bars:
                 if not self._quoted(bar.close, quote):
                     continue
-                seen[bar.meta.valid_from_ns] = {
-                    "time": bar.meta.valid_from_ns // NS,
-                    "open": float(number(bar.open.amount) or 0),
-                    "high": float(number(bar.high.amount) or 0),
-                    "low": float(number(bar.low.amount) or 0),
-                    "close": float(number(bar.close.amount) or 0),
-                    "dataset": bar.meta.source.dataset,
-                }
+                seen[bar.meta.valid_from_ns] = Bar(
+                    time=bar.meta.valid_from_ns // NS,
+                    at=moment(bar.meta.valid_from_ns),
+                    open=number(bar.open.amount),
+                    high=number(bar.high.amount),
+                    low=number(bar.low.amount),
+                    close=number(bar.close.amount),
+                    dataset=bar.meta.source.dataset,
+                )
             cursor = page.next_cursor
             if not cursor:
                 break

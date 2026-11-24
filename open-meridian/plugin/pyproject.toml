@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "desk"
-version = "0.1.0"
+version = "0.1.1"
 description = "A read-only desk of Dockview panels on an Open Meridian deployment: orders, positions, prices and bars"
 license = { text = "MIT" }
 requires-python = ">=3.11"
