@@ -14,6 +14,9 @@ person only the rows of the accounts they may read on it.
 - Bars of that instrument, at each bar length the lake holds.
 - An instrument in the deployment's master, by an identifier.
 
+Each of these reads is also a read tool an agent calls for a person, under
+the same levels and cut to the same accounts.
+
 ## What it does not do
 
 - It places, amends, cancels and releases nothing: no button or chart hook

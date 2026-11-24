@@ -18,7 +18,7 @@
 > 1. Build the desk's front end: `open-meridian/ci/frontend.sh`.
 > 2. Upload and launch the plugin:
 >    `meridian plugin upload --dir open-meridian/plugin`, then
->    `meridian plugin launch desk 0.1.0 --instance desk`.
+>    `meridian plugin launch desk 0.1.1 --instance desk`.
 > 3. For prices and bars, launch a data plugin that records them, such as
 >    [plugin-truefx](https://github.com/open-meridian/plugin-truefx). On **Data sources**, license its datasets and
 >    entitle `desk` to them.

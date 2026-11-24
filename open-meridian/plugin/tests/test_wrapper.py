@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from standin import Sidecar  # noqa: E402
 
 from desk.book import Book, token_of  # noqa: E402
-from desk.pages import CSP, pages, use  # noqa: E402
+from desk.pages import CSP, SERVED, pages, use  # noqa: E402
 
 SRC = Path(__file__).parent.parent / "src" / "desk"
 
@@ -159,3 +159,116 @@ def test_the_wrapper_holds_no_order_act_and_no_outside_route() -> None:
                       r"amend_placement|cancel_placement|record_execution|place_order)\b", code)
     assert acts == []
     assert not re.search(r"^\s*(import|from) (urllib\.request|http\.client|socket|requests|httpx|aiohttp)\b", code, re.M)
+
+
+#: Each read the desk shows, by its route, and the read tool that answers
+#: the same on the deployment's MCP surface. `me` is the person's own
+#: session (their name and accounts), which an agent's session already holds.
+PARITY = {
+    "blotter": "read_blotter",
+    "positions": "read_positions",
+    "lookup": "read_instrument",
+    "price": "read_latest_price",
+    "intervals": "read_bar_lengths",
+    "bars": "read_bars",
+}
+
+
+def test_every_read_the_desk_shows_has_its_read_tool_at_the_same_levels() -> None:
+    tools = {tool.name: tool for tool in pages.tools}
+    assert set(PARITY.values()) | {"read_datasets"} == set(tools)
+    for name in PARITY.values():
+        tool = tools[name]
+        assert tool.reads and tool.method == "GET" and tool.path.startswith("/tools/"), name
+        assert set(tool.levels) == set(SERVED), name
+
+
+def test_each_read_tool_answers_what_its_panel_shows() -> None:
+    pair = {"base": "INS-EUR", "quote": "INS-USD"}
+    for level in ("write", "read"):
+        pat, _ = client(read={"ACC-A"})
+        blotter = pat.call_tool("read_blotter", level=level)
+        assert blotter.status == 200 and blotter.outcome == "unchanged"
+        shown = body(pat.get("/api/blotter", level))
+        assert blotter.data["rows"] == shown["rows"] and blotter.data["changed_only"] is False
+        assert blotter.data["since"] == shown["since"]
+        held = pat.call_tool("read_positions", level=level).data["rows"]
+        assert held == body(pat.get("/api/positions", level))["rows"]
+        found = pat.call_tool("read_instrument", {"query": "eur/usd"}, level=level).data["found"]
+        assert found == [body(pat.get("/api/lookup", level, q="eur/usd"))["found"]]
+        assert pat.call_tool("read_instrument", {"query": "XYZ/ABC"}, level=level).data["found"] == []
+        latest = pat.call_tool("read_latest_price", pair, level=level).data
+        assert latest == body(pat.get("/api/price", level, **pair))["latest"]
+        lengths = pat.call_tool("read_bar_lengths", pair, level=level).data
+        assert lengths == body(pat.get("/api/intervals", level, **pair))
+        bars = pat.call_tool("read_bars", {**pair, "interval": "1d"}, level=level).data
+        drawn = body(pat.get("/api/bars", level, interval="1d", **pair))["bars"]
+        assert bars["interval"] == "1d" and len(bars["bars"]) == len(drawn) == 30
+        for exact, chart in zip(bars["bars"], drawn, strict=True):
+            assert exact["time"] == chart["time"] and exact["dataset"] == chart["dataset"]
+            # The chart takes numbers; the tool answers the lake's text, exact.
+            for key in ("open", "high", "low", "close"):
+                assert isinstance(exact[key], str) and float(exact[key]) == chart[key]
+
+
+def test_the_blotter_and_positions_tools_are_cut_to_the_callers_accounts() -> None:
+    pat, _ = client(read={"ACC-A"})
+    sam, _ = client(read={"ACC-B"}, who="local|sam", name="Sam Example")
+    for person, mine, theirs in ((pat, "ACC-A", "ACC-B"), (sam, "ACC-B", "ACC-A")):
+        rows = person.call_tool("read_blotter").data["rows"]
+        assert rows and {r["account"] for r in rows} == {mine}
+        held = person.call_tool("read_positions").data["rows"]
+        assert [h["account"] for h in held] == [mine]
+        assert theirs not in json.dumps(rows) + json.dumps(held)
+    nobody, _ = client(read=())
+    assert nobody.call_tool("read_blotter").data["rows"] == []
+    assert nobody.call_tool("read_positions").data["rows"] == []
+
+
+def test_the_blotter_tool_reads_changed_since_and_refuses_a_token_it_never_handed_out() -> None:
+    from meridian.plugin.v1 import operations_pb2 as ops
+
+    pat, sidecar = client(read={"ACC-A"})
+    halfway = token_of(ops.Watermark(partitions=[ops.PartitionSequence(partition="book-0", sequence=5)]))
+    later = pat.call_tool("read_blotter", {"since": halfway}).data
+    assert later["changed_only"] is True
+    assert [r["id"] for r in later["rows"]] == ["PLC-A2", "ORD-A2"]
+    assert sidecar.asked[-1].since.partitions[0].sequence == 5
+    refused = pat.call_tool("read_blotter", {"since": "not-a-token!"})
+    assert refused.status == 422 and refused.json["fields"][0]["path"] == "since"
+
+
+def test_a_read_tool_is_refused_as_its_panel_is() -> None:
+    pair = {"base": "INS-EUR", "quote": "INS-USD"}
+    pat, _ = client(Sidecar(entitled=False), read={"ACC-A"})
+    for name, arguments in (
+        ("read_latest_price", pair),
+        ("read_bar_lengths", pair),
+        ("read_bars", {**pair, "interval": "1d"}),
+    ):
+        refused = pat.call_tool(name, arguments)
+        assert refused.status == 422 and refused.json["reason"] == "declined", name
+        assert "not entitled to any dataset" in refused.json["detail"], name
+    assert pat.call_tool("read_latest_price", {}).status == 422
+    assert pat.call_tool("read_bars", {**pair, "interval": "1w"}).status == 422
+
+
+def test_the_read_tools_are_not_served_under_manage_and_take_no_change() -> None:
+    pat, _ = client(read={"ACC-A"})
+    paths = ("/tools/blotter", "/tools/positions", "/tools/instrument?query=EUR",
+             "/tools/latest-price?base=INS-EUR", "/tools/bar-lengths?base=INS-EUR", "/tools/bars?base=INS-EUR")
+    for path in paths:
+        route, _, query = path.partition("?")
+        asked = dict(each.split("=") for each in query.split("&")) if query else {}
+        assert pat.get(route, "admin", **asked).status == 403, path
+        assert pat.get(route, "", **asked).status == 403, path
+        for method in ("POST", "PUT", "PATCH", "DELETE"):
+            assert pat.request(method, route, "write").status == 405, (method, path)
+
+
+def test_a_browser_reads_a_read_tool_as_a_page_of_the_same_rows() -> None:
+    pat, _ = client(read={"ACC-A"})
+    page = pat.get("/tools/blotter", "read").text
+    assert "PLC-A2" in page and "<table" in page and "ACC-B" not in page
+    assert "1.1534" in pat.get("/tools/latest-price", "read", base="INS-EUR", quote="INS-USD").text
+    assert "INS-USD" in pat.get("/tools/instrument", "read", query="EUR/USD").text
