@@ -3,8 +3,10 @@
 at 375, 582 and 1280 wide with no sideways scroll; the watchlist's price and
 the chart's bars with their times; the picker pointing both at what it
 picks; the blotter cut to the person's account; a panel floated and popped
-out; every request to the page's own origin; and, with the entitlement
-withdrawn, the refusal in the watchlist and the chart.
+out; every request to the page's own origin; with the entitlement
+withdrawn, the refusal in the watchlist and the chart; and every other page
+the plugin draws, the popped-out window and the Datasets tab under Manage,
+at the same three widths with no sideways scroll.
 
 Needs the front end built into web/ (open-meridian/ci/frontend.sh) and
 Playwright's Chromium; skipped without them. Screenshots go to
@@ -39,9 +41,15 @@ def free_port() -> int:
         return held.getsockname()[1]
 
 
-def serve(entitled: bool = True):
+def serve(entitled: bool = True, level: str = "read"):
     port = free_port()
-    env = dict(os.environ, DESK_WEB=str(WEB), DESK_ENTITLED="1" if entitled else "0", DESK_ACCOUNTS="ACC-A")
+    env = dict(
+        os.environ,
+        DESK_WEB=str(WEB),
+        DESK_ENTITLED="1" if entitled else "0",
+        DESK_ACCOUNTS="ACC-A",
+        DESK_LEVEL=level,
+    )
     process = subprocess.Popen([sys.executable, str(HERE / "dev.py"), str(port)], env=env)
     for _ in range(100):
         try:
@@ -58,6 +66,14 @@ def shot(page, name: str) -> None:
     if shots:
         Path(shots).mkdir(parents=True, exist_ok=True)
         page.screenshot(path=f"{shots}/{name}.png")
+
+
+def sideways(page) -> tuple[int, int]:
+    """The document's width and the room the window gives it, once the page
+    has drawn at the window's size."""
+    page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
+    wide, room = page.evaluate("[document.documentElement.scrollWidth, document.documentElement.clientWidth]")
+    return wide, room
 
 
 def outside(asked: list[str], base: str) -> list[str]:
@@ -179,6 +195,56 @@ def test_with_the_entitlement_withdrawn_the_watchlist_and_chart_show_the_refusal
                 refused.wait_for(timeout=30_000)
                 assert "not entitled to any dataset" in refused.inner_text()
             shot(page, "desk-refused")
+            browser.close()
+    finally:
+        process.kill()
+
+
+def test_the_popped_out_window_at_each_width_with_no_sideways_scroll() -> None:
+    process, base = serve()
+    try:
+        with playwright.sync_playwright() as p:
+            browser = p.chromium.launch()
+            context = browser.new_context(viewport={"width": 1280, "height": 860})
+            page = context.new_page()
+            asked: list[str] = []
+            context.on("request", lambda r: asked.append(r.url))
+            page.goto(base + "/")
+            page.wait_for_selector("[data-panel=watchlist] .price", timeout=30_000)
+            show(page, "positions")
+            with context.expect_page(timeout=15_000) as opened:
+                page.click("[data-action=popout]")
+            popout = opened.value
+            popout.wait_for_load_state()
+            popout.locator("[data-panel=positions]").wait_for(timeout=10_000)
+            for width in WIDTHS:
+                popout.set_viewport_size({"width": width, "height": 860})
+                scroll, room = sideways(popout)
+                assert scroll <= room, f"the popped-out window: {scroll}px wide in {room}px at {width}"
+                shot(popout, f"popout-{width}")
+            assert outside(asked, base) == [], outside(asked, base)
+            browser.close()
+    finally:
+        process.kill()
+
+
+def test_the_datasets_tab_under_manage_at_each_width_with_no_sideways_scroll() -> None:
+    process, base = serve(level="admin")
+    try:
+        with playwright.sync_playwright() as p:
+            browser = p.chromium.launch()
+            for width in WIDTHS:
+                page = browser.new_page(viewport={"width": width, "height": 860})
+                asked: list[str] = []
+                page.on("request", lambda r, asked=asked: asked.append(r.url))
+                answer = page.goto(base + "/datasets")
+                assert answer is not None and answer.status == 200
+                page.get_by_role("heading", name="Datasets").wait_for(timeout=10_000)
+                scroll, room = sideways(page)
+                assert scroll <= room, f"Datasets: {scroll}px wide in {room}px at {width}"
+                shot(page, f"datasets-{width}")
+                assert outside(asked, base) == [], outside(asked, base)
+                page.close()
             browser.close()
     finally:
         process.kill()

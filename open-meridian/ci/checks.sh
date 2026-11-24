@@ -12,6 +12,9 @@
 #    the desk's code names no address, socket or event stream of another origin.
 # 5. No order path: nothing we add imports OpenAlgo Charts' trade or widget
 #    tier, hands it an order hook, or calls an order act.
+# 6. Colour: the desk's own UI draws with the kit's tokens (CSS custom
+#    properties): no raw colour in its styles, markup or scripts, whether a
+#    hex, a colour function (rgb(), hsl() and the like) or a colour's name.
 set -euo pipefail
 failed=0
 fail() { echo "checks: $*" >&2; failed=1; }
@@ -62,5 +65,14 @@ if grep -RnE "method: *['\"](POST|PUT|PATCH|DELETE)" "${src[@]}"; then
   fail "the desk sends a change: every route it calls is a read"
 fi
 
-[ "$failed" -eq 0 ] && echo "checks: upstream untouched, names, licences, no dockview-enterprise, no route out and no order path hold"
+# 6. Colour.
+colours=(open-meridian/web/src open-meridian/web/index.html open-meridian/web/popout.html)
+if grep -RnE '(^|[^&0-9A-Za-z_])#[0-9a-fA-F]{3,8}\b|\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(' "${colours[@]}"; then
+  fail "the desk's own UI writes a raw colour: use the kit's tokens, var(--...)"
+fi
+if grep -RniE "[:'\"=(,[:space:]](white|black|red|green|blue|gray|grey|orange|yellow|purple|pink|silver|navy|maroon|teal|olive|lime|aqua|fuchsia)\s*[;'\",)!]" "${colours[@]}"; then
+  fail "the desk's own UI names a colour: use the kit's tokens, var(--...)"
+fi
+
+[ "$failed" -eq 0 ] && echo "checks: upstream untouched, names, licences, no dockview-enterprise, no route out, no order path and no raw colour hold"
 exit "$failed"
